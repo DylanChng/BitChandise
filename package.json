@@ -1,0 +1,22 @@
+{
+  "name": "blockchain",
+  "version": "1.0.0",
+  "main": "api.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "json": "^10.0.0",
+    "nodemon": "^2.0.6",
+    "package": "^1.0.1",
+    "save": "^2.4.0",
+    "sha256": "^0.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --watch dev -e js dev/api.js"
+  },
+  "author": "dylan",
+  "license": "ISC",
+  "description": ""
+}
