@@ -3,6 +3,13 @@
 	Use the web version but linked with the app too
 	Refer Chap 17 slide 18 for more details
 	
+	Example Transaction: 
+{
+    "amount": 20,
+    "sender": "B4CEE9C0E5CD571",
+    "recipient": "3A3F6E462D48E2"
+}
+	
 2. Viewing the blockchain -> localhost:3000/blockchain
 
 3. Creating a new Block - Browser -> localhost:3000/mine 
