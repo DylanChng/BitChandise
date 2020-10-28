@@ -1,0 +1,8 @@
+1. Postman - Basically making a transaction with this platform, POST a transaction with JSON to localhost:3000/transaction 
+	Install postman at 				https://www.postman.com/pricing/ 
+	Use the web version but linked with the app too
+	Refer Chap 17 slide 18 for more details
+	
+2. Viewing the blockchain -> localhost:3000/blockchain
+
+3. Creating a new Block - Browser -> localhost:3000/mine 
