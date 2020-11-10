@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const { v1: uuidv1 } = require('uuid');
 
 const Blockchain = require('./blockchain.js');
 const blockchain = new Blockchain;
@@ -12,18 +13,18 @@ app.use(bodyParser.urlencoded({
 }));
 
 //endpoint 1 - fetch entire blockchain
-app.get('/blockchain', function (req, res){
+app.get('/blockchain', (req, res) => {
    res.send(blockchain);
 });
 
 //endpoint 2 - create transaction
-app.post('/transaction', function (req, res){
+app.post('/transaction', (req, res) => {
    const blockIndex = blockchain.createNewTransaction(req.body.amount, req.body.sender, req.body.recipient);
    res.json({ note: 'Transaction will be added in block ' + blockIndex + '.'});
 });
 
 //endpoint 3 - mining a new block
-app.get('/mine', function (req, res){
+app.get('/mine', (req, res) => {
     const lastBlock = blockchain.getLastBlock();
     const previousBlockHash = lastBlock['hash'];
     const currentBlockData = {
@@ -43,6 +44,6 @@ app.get('/mine', function (req, res){
 });
 
 //listening port
-app.listen(3000, function(){
+app.listen(3000, () => {
     console.log('listening on port 3000...');
 });
