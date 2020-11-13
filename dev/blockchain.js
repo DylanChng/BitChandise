@@ -2,14 +2,19 @@
 //import sha256 
 const sha256 = require('sha256');
 const POWhash = "0000";
+const currentNodeUrl = process.argv[3];
 
 function Blockchain() {
-  //meat of blockchain
+  //blockchain data here
   this.chain = [];
   //temporary blocks will be held here
   this.pendingTransactions = [];
+  //Current node URL
+  this.currentNodeUrl = currentNodeUrl; 
+  //Nodes in the network
+  this.networkNodes = []; 
   //genesis block
-  this.createNewBlock(100, '0', '0');
+  this.createNewBlock(777777, 'Bitchandise', 'genesis block');
 }
 
 //Creating a new block from mining method
@@ -46,6 +51,21 @@ Blockchain.prototype.createNewTransaction = function(amount, sender, recipient){
  return this.getLastBlock()['index'] + 1;
 }
 
+Blockchain.prototype.createNewItem = function(itemId,itemName,description, location, status, comment, expiryDate, collectionDate){
+  const newTransaction = {
+      itemId: itemId,
+      itemName: itemName,
+      description: description,
+      location: location,
+      status: status,
+      comment: comment,
+      expiryDate: expiryDate,
+      collectionDate: collectionDate
+  }
+  this.pendingTransactions.push(newTransaction);
+  return this.getLastBlock()['index'] + 1;
+}
+
 //hashing data method 
 Blockchain.prototype.hashBlock = function(previousBlockHash, currentBlockData, nonce){
   //convert params to string 
@@ -57,7 +77,7 @@ Blockchain.prototype.hashBlock = function(previousBlockHash, currentBlockData, n
   return hash;
 }
 
-//proof of work POW
+//proof of work (POW)
 Blockchain.prototype.proofOfWork = function(previousBlockHash, currentBlockData){
   let nonce = 0; 
   let hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
