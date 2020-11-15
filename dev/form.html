@@ -105,20 +105,6 @@
         </table>
     </div> 
     <div class="row">
-        <div class="container col-md-3">
-            <h4><small>Pending Transactions</small></h4>
-            <table class="table table-striped">
-                <tr  class="bg-info">
-                    <th>Amount</th>
-                    <th>Sender</th>
-                    <th>Recipient</th>
-                </tr>
-            
-                <tbody id="myTable">
-                    
-                </tbody>
-            </table>
-        </div>
         <div class="container col-md-9">
             <h4><small>Pending Transactions</small></h4>
             <table class="table table-striped">
@@ -144,7 +130,7 @@
             var row = `<tr>
 							<td>${data.chain[i].index}</td>
 							<td>${data.chain[i].timestamp}</td>
-                            <td>${data.chain[i].transactions[i]}</td>
+                            <td>${data.chain[i].transactions.length}</td>
                             <td>${data.chain[i].nonce}</td>
                             <td>${data.chain[i].hash}</td>
                             <td>${data.chain[i].previousBlockHash}</td>
