@@ -58,6 +58,8 @@ app.get('/mine', (req, res) => {
     //call the mining method 
     const newBlock = bitchandise.createNewBlock(nonce, previousBlockHash, blockHash);
 
+    console.log(bitchandise.checkValid())
+
     res.json({
         note: "new block mined successfully",
         block: newBlock
