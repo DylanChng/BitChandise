@@ -26,6 +26,13 @@ app.use(bodyParser.urlencoded({
     extended: false
 }));
 
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS, PUT");
+    next();
+});
+
 //endpoint 1 - fetch entire blockchain
 app.get('/blockchain', (req, res) => {
    res.send(bitchandise);
@@ -62,6 +69,13 @@ app.get('/mine', (req, res) => {
         bitchandise.createNewTransaction(12.5,"00",nodeAddress) //reward
     */
 });
+
+//endpoint 4 - create new item
+app.post('/createItem', (req, res) => {
+    const blockIndex = bitchandise.createNewItem(req.body.itemID, req.body.itemName, req.body.description, req.body.location, req.body.status,
+         req.body.comment, req.body.expiryDate, req.body.collectionDate);
+    res.json({ note: 'Transaction will be added in block ' + blockIndex + '.'});
+ });
 
 //register new node and broadcast to other nodes
 app.post('/register-and-broadcast-node', (req,res) =>{

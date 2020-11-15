@@ -4,18 +4,202 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-    <form method="POST" action="http://localhost:3000/transaction">
-        <label for="amount">Amount</label>
-        <input type="text" name="amount" id="amount"><br>
+    <div class="container-fluid">
+    <div class="row content">
+      <div class="col-sm-6 sidenav mt-3">
+        <h4>BitChandise's Nodes</h4>
+        <div>
+            <label for="portNum">Port Number</label>
+            <select name="ports" id="port" onchange="switchPort()">
+                <option value="">Select Port</option>
+                <option value="http://localhost:3001/">3001</option>
+                <option value="http://localhost:3002/">3002</option>
+                <option value="http://localhost:3003/">3003</option>
+                <option value="http://localhost:3004/">3004</option>
+                <option value="http://localhost:3005/">3005</option>
+              </select>
+        </div> 
 
-        <label for="sender">Sender</label>
-        <input type="text" name="sender" id="sender"><br>
+      </div>
+  
+      <div class="row col-sm-6 mt-3">
+        <div class="col-sm-4">
+            <h4><small>New Transaction</small></h4>
+            <hr>
+            <!-- transaction -->
+            <form id="transact" method="POST" action="">
+            <div class="form-group">
+                <label for="amount">Amount</label>
+                <input type="text" name="amount" id="amount"><br>
+            </div>
+            <div class="form-group">
+                <label for="sender">Sender</label>
+                <input type="text" name="sender" id="sender"><br>
+            </div>
+            <div class="form-group">
+                <label for="recipient">Recipient</label>
+                <input type="text" name="recipient" id="recipient"><br>
+            </div>
+            <div class="form-group">
+                <input class="btn btn-primary" type="submit" value="Create">
+            </div>
+            </form>
+        </div>
+        
+        
+        <div class="col-sm-6">
+            <h4><small>New Item</small></h4>
+        <hr>
+            <!-- new Item -->
+        <form id="newItem" method="POST" action="">
+            <label for="amount">Item ID</label>
+            <input type="text" name="itemID" id="itemID"><br>
+    
+            <label for="amount">Item Name</label>
+            <input type="text" name="itemName" id="itemName"><br>
+    
+            <label for="sender">Description</label>
+            <input type="text" name="description" id="description"><br>
+    
+            <label for="recipient">Location</label>
+            <input type="text" name="location" id="location"><br>
+    
+            <label for="amount">Status</label>
+            <input type="text" name="status" id="status"><br>
+    
+            <label for="sender">Comment</label>
+            <input type="text" name="comment" id="comment"><br>
+    
+            <label for="recipient">Expiry Date</label>
+            <input type="text" name="expiryDate" id="expiryDate"><br>
+            
+            <label for="recipient">Collection Date</label>
+            <input type="text" name="collectionDate" id="collectionDate"><br>
+    
+            <input class=" btn btn-primary" type="submit" value="Create">
+        </form>
+            
+        </div>
+        <br><br>
+    </div>
+    
+    </div>
+    <button class="btn btn-warning" onclick="mineBlock()">Perform Mining</button>
+    <h4><small>Mined Blocks</small></h4>
+    <div>
+        <table class="table table-striped">
+            <tr  class="bg-info">
+                <th>Index</th>
+                <th>Time Stamp</th>
+                <th>Transactions</th>
+                <th>Nonce</th>
+                <th>Hash of Block</th>
+                <th>Previous Block Hash</th>
+            </tr>
+                <tbody id="blockTable">
+                </tbody>
+        </table>
+    </div> 
+    <div class="row">
+        <div class="container col-md-3">
+            <h4><small>Pending Transactions</small></h4>
+            <table class="table table-striped">
+                <tr  class="bg-info">
+                    <th>Amount</th>
+                    <th>Sender</th>
+                    <th>Recipient</th>
+                </tr>
+            
+                <tbody id="myTable">
+                    
+                </tbody>
+            </table>
+        </div>
+        <div class="container col-md-9">
+            <h4><small>Pending Transactions</small></h4>
+            <table class="table table-striped">
+                <tr  class="bg-info">
+                    <th>Amount</th>
+                    <th>Sender</th>
+                    <th>Recipient</th>
+                </tr>
+            
+                <tbody id="tranTable">
+                    
+                </tbody>
+            </table>
+        </div>
+        </div>
+  </div>
+  
+<script>     
+    function loadBlock(data){
+        var blockTable = document.getElementById("blockTable");
+        blockTable.innerHTML = "";
+        for (var i = 0; i < data.chain.length; i++) {
+            var row = `<tr>
+							<td>${data.chain[i].index}</td>
+							<td>${data.chain[i].timestamp}</td>
+                            <td>${data.chain[i].transactions[i]}</td>
+                            <td>${data.chain[i].nonce}</td>
+                            <td>${data.chain[i].hash}</td>
+                            <td>${data.chain[i].previousBlockHash}</td>
+					  </tr>`
+            blockTable.innerHTML += row
+        }
+        console.log("executed");
+    }
 
-        <label for="recipient">Recipient</label>
-        <input type="text" name="recipient" id="recipient"><br>
-        <input type="submit" value="ok">
-    </form>
+   function appendData(data) {
+        var table = document.getElementById("tranTable");
+        table.innerHTML = "";
+        for (var i = 0; i < data.pendingTransactions.length; i++) {
+            var row = `<tr>
+							<td>${data.pendingTransactions[i].amount}</td>
+							<td>${data.pendingTransactions[i].sender}</td>
+							<td>${data.pendingTransactions[i].recipient}</td>
+					  </tr>`
+			table.innerHTML += row
+        }
+        console.log("executed");
+    }
+
+    function switchPort() {
+        //get port number from selection dropdown
+        let theTranURL = document.getElementById("port").value + "transaction";
+        let theItemURL = document.getElementById("port").value + "createItem";
+        //console.log(theTranURL);console.log(theItemURL);
+        //set URL to action in transaction form
+        document.getElementById("transact").action = theTranURL;
+        document.getElementById("newItem").action = theItemURL;
+        loadChain();
+    }
+
+    function loadChain() {
+    let currentNodeURL = document.getElementById("port").value + "blockchain";
+    let theRequest = new Request(currentNodeURL);
+    fetch(theRequest)
+        .then(function(resp){
+            return resp.json();
+        })
+        .then(function(data){
+                appendData(data);
+                loadBlock(data);
+                console.log(data);
+        });
+    }
+
+    function mineBlock(){
+        let currentNodeURL = document.getElementById("port").value + "mine";
+        let theRequest = new XMLHttpRequest();
+        theRequest.open("GET", currentNodeURL);
+        theRequest.send();
+    }
+
+</script>
 </body>
 </html>
