@@ -7,6 +7,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
+<style>
+    table{overflow-x: auto};
+</style>
 <body>
     <div class="container-fluid">
     <div class="row content">
@@ -27,7 +30,7 @@
       </div>
   
       <div class="row col-sm-6 mt-3">
-        <div class="col-sm-4">
+        <div class="col-sm-4" style="visibility: hidden;">
             <h4><small>New Transaction</small></h4>
             <hr>
             <!-- transaction -->
@@ -52,35 +55,45 @@
         
         
         <div class="col-sm-6">
-            <h4><small>New Item</small></h4>
+            <h4 class="text-center"><small>Create New Item</small></h4>
         <hr>
             <!-- new Item -->
         <form id="newItem" method="POST" action="">
-            <label for="amount">Item ID</label>
-            <input type="text" name="itemID" id="itemID"><br>
-    
-            <label for="amount">Item Name</label>
-            <input type="text" name="itemName" id="itemName"><br>
-    
-            <label for="sender">Description</label>
-            <input type="text" name="description" id="description"><br>
-    
-            <label for="recipient">Location</label>
-            <input type="text" name="location" id="location"><br>
-    
-            <label for="amount">Status</label>
-            <input type="text" name="status" id="status"><br>
-    
-            <label for="sender">Comment</label>
-            <input type="text" name="comment" id="comment"><br>
-    
-            <label for="recipient">Expiry Date</label>
-            <input type="text" name="expiryDate" id="expiryDate"><br>
-            
-            <label for="recipient">Collection Date</label>
-            <input type="text" name="collectionDate" id="collectionDate"><br>
-    
-            <input class=" btn btn-primary" type="submit" value="Create">
+            <table>
+                <tr>
+                    <th><label for="amount">Item ID</label></th>
+                    <th><input type="text" name="itemID" id="itemID"></th>
+                </tr>
+                <tr>
+                    <th> <label for="amount">Item Name</label></th>
+                    <th> <input type="text" name="itemName" id="itemName"></th>
+                </tr>
+                <tr>
+                    <th> <label for="sender">Description</label></th>
+                    <th><input type="text" name="description" id="description"></th>
+                </tr>
+                <tr>
+                    <th><label for="recipient">Location</label></th>
+                    <th><input type="text" name="location" id="location"></th>
+                </tr>
+                <tr>
+                    <th><label for="amount">Status</label></th>
+                    <th><input type="text" name="status" id="status"></th>
+                </tr>
+                <tr>
+                    <th><label for="sender">Comment</label></th>
+                    <th><input type="text" name="comment" id="comment"></th>
+                </tr>
+                <tr>
+                    <th><label for="recipient">Expiry Date</label></th>
+                    <th><input type="text" name="expiryDate" id="expiryDate"></th>
+                </tr>
+                <tr>
+                    <th><label for="recipient">Collection Date</label></th>
+                    <th><input type="text" name="collectionDate" id="collectionDate"></th>
+                </tr>
+            </table>
+            <input class=" btn btn-info" type="submit" value="Create">
         </form>
             
         </div>
@@ -92,7 +105,7 @@
     <h4><small>Mined Blocks</small></h4>
     <div>
         <table class="table table-striped">
-            <tr  class="bg-info">
+            <tr  class="bg-warning">
                 <th>Index</th>
                 <th>Time Stamp</th>
                 <th>Transactions</th>
@@ -104,14 +117,19 @@
                 </tbody>
         </table>
     </div> 
-    <div class="row">
-        <div class="container col-md-9">
+    <div>
+        <div>
             <h4><small>Pending Transactions</small></h4>
             <table class="table table-striped">
-                <tr  class="bg-info">
-                    <th>Amount</th>
-                    <th>Sender</th>
-                    <th>Recipient</th>
+                <tr  class="bg-info text-white">
+                    <th>Item ID</th>
+                    <th>Item Name</th>
+                    <th>Description</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Comment</th>
+                    <th>Expiry Date</th>
+                    <th>Collection Date</th>
                 </tr>
             
                 <tbody id="tranTable">
@@ -145,9 +163,14 @@
         table.innerHTML = "";
         for (var i = 0; i < data.pendingTransactions.length; i++) {
             var row = `<tr>
-							<td>${data.pendingTransactions[i].amount}</td>
-							<td>${data.pendingTransactions[i].sender}</td>
-							<td>${data.pendingTransactions[i].recipient}</td>
+							<td>${data.pendingTransactions[i].itemId}</td>
+							<td>${data.pendingTransactions[i].itemName}</td>
+                            <td>${data.pendingTransactions[i].description}</td>
+                            <td>${data.pendingTransactions[i].location}</td>
+							<td>${data.pendingTransactions[i].status}</td>
+                            <td>${data.pendingTransactions[i].comment}</td>
+                            <td>${data.pendingTransactions[i].expiryDate}</td>
+							<td>${data.pendingTransactions[i].collectionDate}</td>
 					  </tr>`
 			table.innerHTML += row
         }
