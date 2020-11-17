@@ -67,10 +67,31 @@ app.get('/mine', (req, res) => {
     //call the mining method 
     const newBlock = bitchandise.createNewBlock(nonce, previousBlockHash, blockHash);
 
-    res.json({
-        note: "new block mined successfully",
-        block: newBlock
-    });
+    
+    const syncNodesPromises = [];
+    bitchandise.networkNodes.forEach(networkNodesUrl => {
+        const requestOptions = {
+            uri: networkNodesUrl + "/sync-nodes",
+            method: "POST",
+            body: { 
+                nodeUrl: networkNodesUrl,
+                newBlock: newBlock,
+            },
+            json: true
+        }
+        syncNodesPromises.push(rp(requestOptions));
+    })
+
+    Promise.all(syncNodesPromises)
+        .then(data => {
+            res.json({
+                note: "new block mined successfully",
+                block: newBlock
+            });
+        })
+    
+
+    
 
     /* Reward system
         const nodeAddress = uuidv1().split("-").join("");
@@ -105,22 +126,30 @@ app.post('/register-and-broadcast-node', (req,res) =>{
     }
     
     const regNodesPromises = [];
+    
+    //For new node only
+    const transactionSyncReq  = {
+        uri: newNodeUrl + "/sync-transaction-new-node",
+        method: "POST",
+        body: {
+            transactions: bitchandise.chain
+        },
+        json: true
+    }
+    regNodesPromises.push(rp(transactionSyncReq));
+
     bitchandise.networkNodes.forEach(networkNodesUrl => {
         const requestOptions = {
             uri: networkNodesUrl + "/register-node",
             method: "POST",
             body: { 
                 newNodeUrl: newNodeUrl,
-                chain: bitchandise.chain
             },
             json: true
         }
         //rp(requestOptions)
         regNodesPromises.push(rp(requestOptions));
-    })
-
-    console.log(regNodesPromises);
-    
+    })    
     
     Promise.all(regNodesPromises)
         .then(data => {
@@ -150,9 +179,9 @@ app.post('/register-node', (req,res) =>{
     const newNodeUrl = req.body.newNodeUrl;
     const nodeNotAlreadyPresent = bitchandise.networkNodes.indexOf(newNodeUrl) == -1;
     const notCurrentNode = bitchandise.currentNodeUrl !== newNodeUrl;
-    if(nodeNotAlreadyPresent && notCurrentNode)
+    if(nodeNotAlreadyPresent && notCurrentNode){
         bitchandise.networkNodes.push(newNodeUrl);
-    else if(!notCurrentNode){
+    }else if(!notCurrentNode){
         res.json({
             note: "New node is the current node"
         })
@@ -163,6 +192,7 @@ app.post('/register-node', (req,res) =>{
         })
         return;
     }
+
     
     res.json({note: "New node registered successfully. "})
 });
@@ -185,3 +215,25 @@ app.post('/register-nodes-bulk',(req,res) =>{
 app.listen(port, () =>{
     console.log(`listening on port ${port}...`);
 });
+
+app.post("/sync-transaction-new-node", (req,res) => {
+    const allTransactions = req.body.transactions;
+    bitchandise.chain = allTransactions;
+
+    res.json({
+        note: "Syncronization of blocks with new nodes is successful"
+    })
+})
+
+app.post("/sync-nodes", (req,res)=> {
+    //const nodeUrl = req.body.nodeUrl;
+    const newBlock = req.body.newBlock;
+
+    console.log(newBlock);
+
+    bitchandise.chain.push(newBlock);
+
+    res.json({
+        note: "New block added"
+    })
+})

@@ -25,6 +25,8 @@
                 <option value="http://localhost:3004/">3004</option>
                 <option value="http://localhost:3005/">3005</option>
               </select>
+            <br>
+            <button class="btn btn-primary" onclick="registerNode()">Add to network</button>
         </div> 
 
       </div>
@@ -155,7 +157,7 @@
 					  </tr>`
             blockTable.innerHTML += row
         }
-        console.log("executed");
+        //console.log("executed");
     }
 
    function appendData(data) {
@@ -174,17 +176,17 @@
 					  </tr>`
 			table.innerHTML += row
         }
-        console.log("executed");
+        //console.log("executed");
     }
 
     function switchPort() {
         //get port number from selection dropdown
-        let blockchainUrl = document.getElementById("port").value;
+        let nodeUrl = document.getElementById("port").value;
 
-        if(blockchainUrl === "") return;
+        if(nodeUrl === "") return;
 
-        let theTranURL = blockchainUrl + "transaction";
-        let theItemURL = blockchainUrl + "createItem";
+        let theTranURL = nodeUrl + "transaction";
+        let theItemURL = nodeUrl + "createItem";
         //console.log(theTranURL);console.log(theItemURL);
         //set URL to action in transaction form
         document.getElementById("transact").action = theTranURL;
@@ -202,7 +204,7 @@
         .then(function(data){
                 appendData(data);
                 loadBlock(data);
-                console.log(data);
+                //console.log(data);
         });
     }
 
@@ -212,6 +214,32 @@
         theRequest.open("GET", currentNodeURL);
         theRequest.send()
         location.reload();
+    }
+
+    function registerNode(){
+        let newNodeUrl = document.getElementById("port").value;
+    
+        if(newNodeUrl === "") return;
+
+        newNodeUrl = newNodeUrl.slice(0,newNodeUrl.length-1)
+        
+        let data = {
+            newNodeUrl: newNodeUrl
+        }
+        let json = JSON.stringify(data);
+        let xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var jsonArr = JSON.parse(this.responseText);
+                alert(jsonArr.note);
+                window.reload();
+            }
+        };
+
+        xhr.open("POST","http://localhost:3001/register-and-broadcast-node");
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(json)
     }
 
 </script>
