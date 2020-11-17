@@ -38,6 +38,15 @@ app.get('/blockchain', (req, res) => {
    res.send(bitchandise);
 });
 
+app.get('/transaction',(req, res) => {
+    let transactions = [];
+    bitchandise.chain.forEach(block => {        
+        transactions.push(...block.transactions);
+    })
+
+    res.send(transactions);
+})
+
 //endpoint 2 - create transaction
 app.post('/transaction', (req, res) => {
    const blockIndex = bitchandise.createNewTransaction(req.body.amount, req.body.sender, req.body.recipient);
@@ -57,8 +66,6 @@ app.get('/mine', (req, res) => {
     const blockHash = bitchandise.hashBlock(previousBlockHash, currentBlockData, nonce);
     //call the mining method 
     const newBlock = bitchandise.createNewBlock(nonce, previousBlockHash, blockHash);
-
-    console.log(bitchandise.checkValid())
 
     res.json({
         note: "new block mined successfully",
@@ -110,8 +117,9 @@ app.post('/register-and-broadcast-node', (req,res) =>{
         }
         //rp(requestOptions)
         regNodesPromises.push(rp(requestOptions));
-        console.log(rp(requestOptions));
     })
+
+    console.log(regNodesPromises);
     
     
     Promise.all(regNodesPromises)

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>BitChandise Testing</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
@@ -156,8 +156,12 @@
 
     function switchPort() {
         //get port number from selection dropdown
-        let theTranURL = document.getElementById("port").value + "transaction";
-        let theItemURL = document.getElementById("port").value + "createItem";
+        let blockchainUrl = document.getElementById("port").value;
+
+        if(blockchainUrl === "") return;
+
+        let theTranURL = blockchainUrl + "transaction";
+        let theItemURL = blockchainUrl + "createItem";
         //console.log(theTranURL);console.log(theItemURL);
         //set URL to action in transaction form
         document.getElementById("transact").action = theTranURL;
@@ -183,7 +187,8 @@
         let currentNodeURL = document.getElementById("port").value + "mine";
         let theRequest = new XMLHttpRequest();
         theRequest.open("GET", currentNodeURL);
-        theRequest.send();
+        theRequest.send()
+        location.reload();
     }
 
 </script>
