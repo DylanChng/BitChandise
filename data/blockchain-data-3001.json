@@ -1,0 +1,15 @@
+{
+  "chain": [
+    {
+      "index": 1,
+      "timestamp": 1609626862884,
+      "transactions": [],
+      "nonce": 777777,
+      "hash": "genesis block",
+      "previousBlockHash": "Bitchandise"
+    }
+  ],
+  "pendingTransactions": [],
+  "currentNodeUrl": "http://localhost:3001",
+  "networkNodes": []
+}

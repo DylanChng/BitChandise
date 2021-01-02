@@ -104,10 +104,11 @@ Blockchain.prototype.checkValid = function(){
         return false;
     }
     */
-
+    /*
     if (currentBlock.previousHash !== previousBlock.hash) {
         return false;
     }
+    */
   }
 
   return true;
@@ -120,34 +121,35 @@ Blockchain.prototype.saveChainData = function(){
   data = JSON.stringify(data, null, 2);
   console.log(data);
 
-  try {
-    fs.writeFileSync(`./blockchain/blockchain-data-${portNum}.json`, data, (err) => {
+  fs.mkdir('./data', { recursive: true }, (err) => {
+    if (err) {
+      console.log(err);
+    }
+
+    fs.writeFile(`./data/blockchain-data-${portNum}.json`, data, (err) => {
       if(err) throw err;
       console.log("Write successful");
     })
-  } catch (error) {
-    console.log(error);
-  }
+  });
 }
 
 Blockchain.prototype.loadChainData = function(){
-  try{
-    fs.readFileSync(`./blockchain/blockchain-data-${portNum}.json`, (err, data) => {
-      if (err) throw err;
-      let blockchainData = JSON.parse(data);
-      console.log(blockchainData);
-  
-      this.chain = blockchainData.chain;
-      this.pendingTransactions = blockchainData.pendingTransactions;
-      this.currentNodeUrl = blockchainData.currentNodeUrl;
-      this.networkNodes = blockchainData.networkNodes;
-    })
-  } catch (error) {
-    console.log(error);
-    console.log("The file \"" + `blockchain-data-${portNum}.json` +"\" cannot be found");
-  }
-  
+  //try{
+  fs.readFile(`./data/blockchain-data-${portNum}.json`, (err, data) => {
+    if (err) {
+      console.log(err);
+      console.log("The file \"" + `blockchain-data-${portNum}.json` +"\" cannot be found");
+      return;
+    };
 
+    let blockchainData = JSON.parse(data);
+    //console.log(blockchainData);
+
+    this.chain = blockchainData.chain;
+    this.pendingTransactions = blockchainData.pendingTransactions;
+    this.currentNodeUrl = blockchainData.currentNodeUrl;
+    this.networkNodes = blockchainData.networkNodes;
+  })
 }
 
 //export

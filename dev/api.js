@@ -11,6 +11,8 @@ const rp = require("request-promise");
 //Blockchain related constants
 const Blockchain = require('./blockchain.js');
 const bitchandise = new Blockchain;
+//bitchandise.saveChainData();
+bitchandise.loadChainData()
 
 //http://localhost:3001/blockchain - npm run node_1
 //http://localhost:3002/blockchain - npm run node_2
@@ -68,6 +70,7 @@ app.get('/mine', (req, res) => {
     //call the mining method 
     const newBlock = bitchandise.createNewBlock(nonce, previousBlockHash, blockHash);
 
+    bitchandise.saveChainData();
     
     const syncNodesPromises = [];
     bitchandise.networkNodes.forEach(networkNodesUrl => {
@@ -105,6 +108,9 @@ app.get('/mine', (req, res) => {
 app.post('/createItem', (req, res) => {
     const blockIndex = bitchandise.createNewItem(req.body.itemID, req.body.itemName, req.body.description, req.body.location, req.body.status,
          req.body.comment, req.body.expiryDate, req.body.collectionDate);
+
+    bitchandise.saveChainData();
+
     res.json({ note: 'Transaction will be added in block ' + blockIndex + '.'});
  });
 
@@ -125,6 +131,8 @@ app.post('/register-and-broadcast-node', (req,res) =>{
         })
         return;
     }
+
+    bitchandise.saveChainData();
     
     const regNodesPromises = [];
     
@@ -167,12 +175,12 @@ app.post('/register-and-broadcast-node', (req,res) =>{
                 res.json({
                     note: "New Node registered with network successfully"
                 })
-        })
+            })
                 
         });
 });
 
-//register node
+//Register a new node to the list of nodes in the network, NOT STANDLONE
 app.post('/register-node', (req,res) =>{
     const newNodeUrl = req.body.newNodeUrl;
     const nodeNotAlreadyPresent = bitchandise.networkNodes.indexOf(newNodeUrl) == -1;
@@ -191,10 +199,12 @@ app.post('/register-node', (req,res) =>{
         return;
     }
 
+    bitchandise.saveChainData();
     
     res.json({note: "New node registered successfully. "})
 });
 
+//Register a list of nodes currently in the network for the new node, NOT STANDALONE
 app.post('/register-nodes-bulk',(req,res) =>{
     const allNetworkNodes = req.body.allNetworkNodes;
 
@@ -205,31 +215,40 @@ app.post('/register-nodes-bulk',(req,res) =>{
             bitchandise.networkNodes.push(networkNodesUrl)
     })
     
+    bitchandise.saveChainData();
+
     res.json({
         note: "Bulk registration successfull"
     })
 })
 
-app.listen(port, () =>{
-    console.log(`listening on port ${port}...`);
-});
 
+//New node added to the network copies the chain data of the registry node
 app.post("/sync-transaction-new-node", (req,res) => {
     const allTransactions = req.body.transactions;
     bitchandise.chain = allTransactions;
+
+    bitchandise.saveChainData();
 
     res.json({
         note: "Syncronization of blocks with new nodes is successful"
     })
 })
 
+
+//Syncronize by adding new blocks to all nodes on the network
 app.post("/sync-nodes", (req,res)=> {
     //const nodeUrl = req.body.nodeUrl;
     const newBlock = req.body.newBlock;
 
     bitchandise.chain.push(newBlock);
+    bitchandise.saveChainData();
 
     res.json({
         note: "New block added"
     })
 })
+
+app.listen(port, () =>{
+    console.log(`listening on port ${port}...`);
+});
