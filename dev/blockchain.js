@@ -3,6 +3,10 @@
 const sha256 = require('sha256');
 const POWhash = "0000";
 const currentNodeUrl = process.argv[3];
+const portNum = process.argv[2];
+
+const fs = require('fs');
+const fsPromise = require('fs').promises;
 
 function Blockchain() {
   //blockchain data here
@@ -107,6 +111,43 @@ Blockchain.prototype.checkValid = function(){
   }
 
   return true;
+}
+
+Blockchain.prototype.saveChainData = function(){
+ 
+  let data = this;
+  //delete data.currentNodeUrl;
+  data = JSON.stringify(data, null, 2);
+  console.log(data);
+
+  try {
+    fs.writeFileSync(`./blockchain/blockchain-data-${portNum}.json`, data, (err) => {
+      if(err) throw err;
+      console.log("Write successful");
+    })
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+Blockchain.prototype.loadChainData = function(){
+  try{
+    fs.readFileSync(`./blockchain/blockchain-data-${portNum}.json`, (err, data) => {
+      if (err) throw err;
+      let blockchainData = JSON.parse(data);
+      console.log(blockchainData);
+  
+      this.chain = blockchainData.chain;
+      this.pendingTransactions = blockchainData.pendingTransactions;
+      this.currentNodeUrl = blockchainData.currentNodeUrl;
+      this.networkNodes = blockchainData.networkNodes;
+    })
+  } catch (error) {
+    console.log(error);
+    console.log("The file \"" + `blockchain-data-${portNum}.json` +"\" cannot be found");
+  }
+  
+
 }
 
 //export

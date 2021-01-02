@@ -1,6 +1,7 @@
 //Express backend server
 const express = require('express');
 const app = express();
+const fs = require('fs')
 
 //Node dependencies
 const bodyParser = require('body-parser');
@@ -169,9 +170,6 @@ app.post('/register-and-broadcast-node', (req,res) =>{
         })
                 
         });
-    
-    
-    
 });
 
 //register node
@@ -228,8 +226,6 @@ app.post("/sync-transaction-new-node", (req,res) => {
 app.post("/sync-nodes", (req,res)=> {
     //const nodeUrl = req.body.nodeUrl;
     const newBlock = req.body.newBlock;
-
-    console.log(newBlock);
 
     bitchandise.chain.push(newBlock);
 
