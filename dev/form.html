@@ -142,7 +142,7 @@
         </div>
   </div>
   
-<script>     
+<script>
     function loadBlock(data){
         var blockTable = document.getElementById("blockTable");
         blockTable.innerHTML = "";
@@ -197,15 +197,18 @@
     function loadChain() {
     let currentNodeURL = document.getElementById("port").value + "blockchain";
     let theRequest = new Request(currentNodeURL);
-    fetch(theRequest)
+        fetch(theRequest)
         .then(function(resp){
             return resp.json();
+        }).catch(error =>{
+            console.log(error);
         })
         .then(function(data){
-                appendData(data);
-                loadBlock(data);
-                //console.log(data);
+            appendData(data);
+            loadBlock(data);
+            //console.log(data);
         });
+
     }
 
     function mineBlock(){
