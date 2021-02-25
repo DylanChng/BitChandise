@@ -11,5 +11,7 @@
   ],
   "pendingTransactions": [],
   "currentNodeUrl": "http://localhost:3001",
-  "networkNodes": []
+  "networkNodes": [
+    "http://127.0.0.1:33008"
+  ]
 }

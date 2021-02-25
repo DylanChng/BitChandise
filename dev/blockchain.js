@@ -119,26 +119,24 @@ Blockchain.prototype.saveChainData = function(){
   let data = this;
   //delete data.currentNodeUrl;
   data = JSON.stringify(data, null, 2);
-  console.log(data);
 
   fs.mkdir('./data', { recursive: true }, (err) => {
     if (err) {
       console.log(err);
     }
 
-    fs.writeFile(`./data/blockchain-data-${portNum}.json`, data, (err) => {
+    fs.writeFile(`./data/blockchain-data.json`, data, (err) => {
       if(err) throw err;
-      console.log("Write successful");
     })
   });
 }
 
 Blockchain.prototype.loadChainData = function(){
   //try{
-  fs.readFile(`./data/blockchain-data-${portNum}.json`, (err, data) => {
+  fs.readFile(`./data/blockchain-data.json`, (err, data) => {
     if (err) {
       console.log(err);
-      console.log("The file \"" + `blockchain-data-${portNum}.json` +"\" cannot be found");
+      console.log("The file \"" + `blockchain-data.json` +"\" cannot be found");
       return;
     };
 

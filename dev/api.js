@@ -11,7 +11,6 @@ const rp = require("request-promise");
 //Blockchain related constants
 const Blockchain = require('./blockchain.js');
 const bitchandise = new Blockchain;
-//bitchandise.saveChainData();
 bitchandise.loadChainData()
 
 //http://localhost:3001/blockchain - npm run node_1
@@ -34,6 +33,13 @@ app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS, PUT");
     next();
+});
+
+
+app.get("/testcon", (req, res) => {
+    res.json({
+        message: "connection ok"
+    })
 });
 
 //endpoint 1 - fetch entire blockchain
@@ -69,8 +75,6 @@ app.get('/mine', (req, res) => {
     const blockHash = bitchandise.hashBlock(previousBlockHash, currentBlockData, nonce);
     //call the mining method 
     const newBlock = bitchandise.createNewBlock(nonce, previousBlockHash, blockHash);
-
-    bitchandise.saveChainData();
     
     const syncNodesPromises = [];
     bitchandise.networkNodes.forEach(networkNodesUrl => {
@@ -88,14 +92,12 @@ app.get('/mine', (req, res) => {
 
     Promise.all(syncNodesPromises)
         .then(data => {
+            bitchandise.saveChainData();
             res.json({
                 note: "new block mined successfully",
                 block: newBlock
             });
         })
-    
-
-    
 
     /* Reward system
         const nodeAddress = uuidv1().split("-").join("");
@@ -131,8 +133,6 @@ app.post('/register-and-broadcast-node', (req,res) =>{
         })
         return;
     }
-
-    bitchandise.saveChainData();
     
     const regNodesPromises = [];
     
@@ -162,6 +162,7 @@ app.post('/register-and-broadcast-node', (req,res) =>{
     
     Promise.all(regNodesPromises)
         .then(data => {
+            bitchandise.saveChainData();
             const bulkRegisterOptions = {
                 uri: newNodeUrl + "/register-nodes-bulk",
                 method: "POST",
@@ -178,6 +179,10 @@ app.post('/register-and-broadcast-node', (req,res) =>{
             })
                 
         });
+    
+    res.json({
+        note: "New Node registered with network successfully"
+    })
 });
 
 //Register a new node to the list of nodes in the network, NOT STANDLONE
