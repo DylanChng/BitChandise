@@ -162,7 +162,6 @@ app.post('/register-and-broadcast-node', (req,res) =>{
     
     Promise.all(regNodesPromises)
         .then(data => {
-            bitchandise.saveChainData();
             const bulkRegisterOptions = {
                 uri: newNodeUrl + "/register-nodes-bulk",
                 method: "POST",
@@ -173,9 +172,7 @@ app.post('/register-and-broadcast-node', (req,res) =>{
             }
 
             return rp(bulkRegisterOptions).then(data => {
-                res.json({
-                    note: "New Node registered with network successfully"
-                })
+                bitchandise.saveChainData();               
             })
                 
         });
@@ -206,7 +203,7 @@ app.post('/register-node', (req,res) =>{
 
     bitchandise.saveChainData();
     
-    res.json({note: "New node registered successfully. "})
+    //res.json({note: "New node registered successfully. "})
 });
 
 //Register a list of nodes currently in the network for the new node, NOT STANDALONE
@@ -222,11 +219,72 @@ app.post('/register-nodes-bulk',(req,res) =>{
     
     bitchandise.saveChainData();
 
-    res.json({
-        note: "Bulk registration successfull"
-    })
 })
 
+app.post('/unregister-nodes-broadcast',(req,res)=>{
+    const nodeUrlToDelete = req.body.nodeUrl;
+
+    bitchandise.networkNodes = bitchandise.networkNodes.filter(nodeURL => {
+        return !nodeURL === nodeUrlToDelete;
+    })
+
+    const delNodesPromises = [];
+
+    const removeNetworkReq  = {
+        uri: nodeUrlToDelete + "/unregister-from-network",
+        method: "POST",
+        body: {
+            test: "test"
+        },
+        json: true
+    };
+
+    delNodesPromises.push(rp(removeNetworkReq));
+
+    /*
+    bitchandise.networkNodes.forEach(networkNodesUrl => {
+        const requestOptions = {
+            uri: networkNodesUrl + "/unregister-node",
+            method: "POST",
+            body: { 
+                nodeUrlToDelete: nodeUrlToDelete,
+            },
+            json: true
+        }
+        //rp(requestOptions)
+        delNodesPromises.push(rp(requestOptions));
+    })*/
+    
+    Promise.all(delNodesPromises).then(data => {
+        bitchandise.saveChainData();
+    })
+
+    res.json({note: "Node deleted from network, URL: " + nodeUrlToDelete})
+
+ 
+})
+
+app.post("/unregister-node", (req,res) => {
+    const nodeUrlToDelete = req.body.nodeUrl;
+
+    bitchandise.networkNodes = bitchandise.networkNodes.filter(nodeURL => {
+        return !nodeURL === nodeUrlToDelete;
+    });
+
+    bitchandise.saveChainData();
+
+    res.json({note: "Node deleted"});
+});
+
+app.post("/unregister-from-network",(req,res) => {
+    
+    bitchandise.networkNodes = [];
+
+    bitchandise.saveChainData();
+
+    res.json({note: "Node unregistered"});
+
+})
 
 //New node added to the network copies the chain data of the registry node
 app.post("/sync-transaction-new-node", (req,res) => {
