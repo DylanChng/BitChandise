@@ -7,12 +7,49 @@
       "nonce": 777777,
       "hash": "genesis block",
       "previousBlockHash": "Bitchandise"
+    },
+    {
+      "index": 2,
+      "timestamp": 1614393709410,
+      "transactions": [
+        {
+          "itemId": "I001",
+          "itemName": "Ipad Air ",
+          "description": "Tablet made by Apple",
+          "location": "Kuala Lumpur",
+          "status": "In Progress",
+          "comment": "Fragile",
+          "expiryDate": "-",
+          "collectionDate": "-"
+        }
+      ],
+      "nonce": 33856,
+      "hash": "0000043732eed6e28c0b4604b56aa8ffa513c8675e05ff25da057ff6c85e648a",
+      "previousBlockHash": "genesis block"
+    },
+    {
+      "index": 3,
+      "timestamp": 1615403511834,
+      "transactions": [
+        {
+          "itemId": "I001",
+          "itemName": "Ips",
+          "description": "zxzx",
+          "location": "xzzx",
+          "status": "zxz",
+          "comment": "xzxz",
+          "expiryDate": "zxxz",
+          "collectionDate": "zxxz"
+        }
+      ],
+      "nonce": 72601,
+      "hash": "0000e6de62018436020151785b2fcc20cf1d8a0724097237865da46236db154a",
+      "previousBlockHash": "0000043732eed6e28c0b4604b56aa8ffa513c8675e05ff25da057ff6c85e648a"
     }
   ],
   "pendingTransactions": [],
   "currentNodeUrl": "http://localhost:3001",
   "networkNodes": [
-    "http://127.0.0.1:33008",
-    "http://127.0.0.1:33015"
+    "http://127.0.0.1:33008"
   ]
 }

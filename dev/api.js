@@ -37,6 +37,7 @@ app.use((req, res, next) => {
 
 
 app.get("/testcon", (req, res) => {
+    console.log(bitchandise.checkValid());
     res.json({
         message: "connection ok"
     })
@@ -92,12 +93,13 @@ app.get('/mine', (req, res) => {
 
     Promise.all(syncNodesPromises)
         .then(data => {
-            bitchandise.saveChainData();
             res.json({
                 note: "new block mined successfully",
                 block: newBlock
             });
         })
+
+    bitchandise.saveChainData();
 
     /* Reward system
         const nodeAddress = uuidv1().split("-").join("");
@@ -170,13 +172,11 @@ app.post('/register-and-broadcast-node', (req,res) =>{
                 },
                 json: true
             }
-
-            return rp(bulkRegisterOptions).then(data => {
-                bitchandise.saveChainData();               
-            })
-                
+            return rp(bulkRegisterOptions)
         });
-    
+
+    bitchandise.saveChainData();               
+
     res.json({
         note: "New Node registered with network successfully"
     })
@@ -225,7 +225,7 @@ app.post('/unregister-nodes-broadcast',(req,res)=>{
     const nodeUrlToDelete = req.body.nodeUrl;
 
     bitchandise.networkNodes = bitchandise.networkNodes.filter(nodeURL => {
-        return !nodeURL === nodeUrlToDelete;
+        return nodeURL !== nodeUrlToDelete;
     })
 
     const delNodesPromises = [];
@@ -241,23 +241,23 @@ app.post('/unregister-nodes-broadcast',(req,res)=>{
 
     delNodesPromises.push(rp(removeNetworkReq));
 
-    /*
     bitchandise.networkNodes.forEach(networkNodesUrl => {
         const requestOptions = {
             uri: networkNodesUrl + "/unregister-node",
             method: "POST",
             body: { 
-                nodeUrlToDelete: nodeUrlToDelete,
+                nodeUrl: nodeUrlToDelete,
             },
             json: true
         }
         //rp(requestOptions)
         delNodesPromises.push(rp(requestOptions));
-    })*/
+    })
     
     Promise.all(delNodesPromises).then(data => {
-        bitchandise.saveChainData();
     })
+
+    bitchandise.saveChainData();
 
     res.json({note: "Node deleted from network, URL: " + nodeUrlToDelete})
 
@@ -268,7 +268,7 @@ app.post("/unregister-node", (req,res) => {
     const nodeUrlToDelete = req.body.nodeUrl;
 
     bitchandise.networkNodes = bitchandise.networkNodes.filter(nodeURL => {
-        return !nodeURL === nodeUrlToDelete;
+        return nodeURL !== nodeUrlToDelete;
     });
 
     bitchandise.saveChainData();
