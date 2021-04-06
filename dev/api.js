@@ -37,7 +37,6 @@ app.use((req, res, next) => {
 
 
 app.get("/testcon", (req, res) => {
-    console.log(bitchandise.checkValid());
     res.json({
         message: "connection ok"
     })
@@ -66,6 +65,7 @@ app.post('/transaction', (req, res) => {
 //endpoint 3 - mining a new block
 app.get('/mine', (req, res) => {
     const lastBlock = bitchandise.getLastBlock();
+    console.log(lastBlock);
     const previousBlockHash = lastBlock['hash'];
     const currentBlockData = {
         transaction: bitchandise.pendingTransactions, index: lastBlock['index'] + 1
@@ -93,14 +93,15 @@ app.get('/mine', (req, res) => {
 
     Promise.all(syncNodesPromises)
         .then(data => {
-            res.json({
-                note: "new block mined successfully",
-                block: newBlock
-            });
+            
         })
 
     bitchandise.saveChainData();
-
+    
+    res.json({
+        note: "new block mined successfully",
+        block: newBlock
+    });
     /* Reward system
         const nodeAddress = uuidv1().split("-").join("");
         console.log(nodeAddress);
@@ -112,7 +113,8 @@ app.get('/mine', (req, res) => {
 app.post('/createItem', (req, res) => {
     const blockIndex = bitchandise.createNewItem(req.body.itemID, req.body.itemName, req.body.description, req.body.location, req.body.status,
          req.body.comment, req.body.expiryDate, req.body.collectionDate);
-
+        
+    console.log(blockIndex);
     bitchandise.saveChainData();
 
     res.json({ note: 'Transaction will be added in block ' + blockIndex + '.'});

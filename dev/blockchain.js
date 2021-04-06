@@ -36,6 +36,7 @@ Blockchain.prototype.createNewBlock = function(nonce, previousBlockHash, hash) {
   this.pendingTransactions = [];
   //push the block into the Blockchain chain
   this.chain.push(newBlock);
+  console.log("mined" + newBlock);
   return newBlock;
 }
 
