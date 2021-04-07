@@ -23,6 +23,7 @@ function Blockchain() {
 
 //Creating a new block from mining method
 Blockchain.prototype.createNewBlock = function(nonce, previousBlockHash, hash) {
+  console.log(this.chain.length);
   const newBlock = {
     index: this.chain.length + 1,
     timestamp: Date.now(),
@@ -55,7 +56,7 @@ Blockchain.prototype.createNewTransaction = function(amount, sender, recipient){
  return this.getLastBlock()['index'] + 1;
 }
 
-Blockchain.prototype.createNewItem = function(itemId,itemName,description, location, status, comment, expiryDate, collectionDate){
+Blockchain.prototype.createNewItem = function(itemId,itemName,description, location, status, comment, expiryDate, collectionDate, madeBy){
   const newTransaction = {
       itemId: itemId,
       itemName: itemName,
@@ -64,7 +65,8 @@ Blockchain.prototype.createNewItem = function(itemId,itemName,description, locat
       status: status,
       comment: comment,
       expiryDate: expiryDate,
-      collectionDate: collectionDate
+      collectionDate: collectionDate,
+      madeBy: madeBy
   }
   this.pendingTransactions.push(newTransaction);
   return this.getLastBlock()['index'] + 1;
