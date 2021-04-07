@@ -57,7 +57,7 @@ Blockchain.prototype.createNewTransaction = function(amount, sender, recipient){
  return this.getLastBlock()['index'] + 1;
 }
 
-Blockchain.prototype.createNewItem = function(itemId,itemName,description, location, status, comment, expiryDate, collectionDate, madeBy){
+Blockchain.prototype.createNewItem = function(itemId,itemName,description, location, status, comment, expiryDate, createdDate, madeBy){
   const newTransaction = {
       itemId: itemId,
       itemName: itemName,
@@ -66,7 +66,7 @@ Blockchain.prototype.createNewItem = function(itemId,itemName,description, locat
       status: status,
       comment: comment,
       expiryDate: expiryDate,
-      collectionDate: collectionDate,
+      createdDate: createdDate,
       madeBy: madeBy
   }
   this.pendingTransactions.push(newTransaction);

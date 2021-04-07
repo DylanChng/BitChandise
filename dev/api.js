@@ -112,7 +112,7 @@ app.get('/mine', (req, res) => {
 //endpoint 4 - create new item
 app.post('/createItem', (req, res) => {
     const blockIndex = bitchandise.createNewItem(req.body.itemId, req.body.itemName, req.body.description, req.body.location, req.body.status,
-         req.body.comment, req.body.expiryDate, req.body.collectionDate, req.body.madeBy);
+         req.body.comment, req.body.expiryDate, req.body.createdDate, req.body.madeBy);
 
     bitchandise.saveChainData();
 
